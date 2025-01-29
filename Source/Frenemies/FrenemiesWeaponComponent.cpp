@@ -2,7 +2,7 @@
 
 
 #include "FrenemiesWeaponComponent.h"
-#include "FrenemiesCharacter.h"
+#include "Character/FrenemiesCharacter.h"
 #include "FrenemiesProjectile.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
