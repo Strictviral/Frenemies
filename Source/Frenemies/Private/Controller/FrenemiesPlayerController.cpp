@@ -26,8 +26,11 @@ void AFrenemiesPlayerController::BeginPlay()
 	check(FrenemiesPlayerContext);
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-	Subsystem->AddMappingContext(FrenemiesPlayerContext, 0);
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(FrenemiesPlayerContext, 0);
+	}
+	
 
 	//show mouse and its data
 	// bShowMouseCursor = true;

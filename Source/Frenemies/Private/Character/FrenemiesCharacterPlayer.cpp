@@ -4,8 +4,10 @@
 #include "Character/FrenemiesCharacterPlayer.h"
 
 #include "AbilitySystemComponent.h"
+#include "Controller/FrenemiesPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/FrenemiesPlayerState.h"
+#include "UI/HUD/FrenemiesHUD.h"
 
 AFrenemiesCharacterPlayer::AFrenemiesCharacterPlayer()
 {
@@ -26,6 +28,7 @@ void AFrenemiesCharacterPlayer::PossessedBy(AController* NewController)
 	//Init ability actor info for the server
 	InitAbilityActorInfo();
 	
+	
 }
 
 void AFrenemiesCharacterPlayer::OnRep_PlayerState()
@@ -43,4 +46,15 @@ void AFrenemiesCharacterPlayer::InitAbilityActorInfo()
 	FrenemiesPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(FrenemiesPlayerState, this);
 	AbilitySystemComponent = FrenemiesPlayerState->GetAbilitySystemComponent();
 	AttributeSet = FrenemiesPlayerState->GetAttributeSet();
+
+	///player controllers has access tot he HUD, thats why we cna call it from the controller
+	if (AFrenemiesPlayerController* FrenemiesPlayerController = Cast<AFrenemiesPlayerController>(GetController()))
+	{
+		if (AFrenemiesHUD* FrenemiesHUD = Cast<AFrenemiesHUD>(FrenemiesPlayerController->GetHUD()))
+		{
+			FrenemiesHUD->InitOverlay(FrenemiesPlayerController, FrenemiesPlayerState, AbilitySystemComponent, AttributeSet);
+		}
+			
+	}
+	
 }
