@@ -18,6 +18,8 @@ void AFrenemiesPlayerController::SetupInputComponent()
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
 	EnhancedInputComponent->BindAction(FrenemiesMoveAction, ETriggerEvent::Triggered, this, &AFrenemiesPlayerController::Move);
+	
+	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFrenemiesPlayerController::Look);
 }
 
 void AFrenemiesPlayerController::BeginPlay()
@@ -58,4 +60,17 @@ void AFrenemiesPlayerController::Move(const FInputActionValue& InputActionValue)
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
 	}
 	
+}
+
+void AFrenemiesPlayerController::Look(const FInputActionValue& Value)
+{
+	// input is a Vector2D
+	FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	if (APawn* ControlledPawn = GetPawn<APawn>())
+	{
+		// add yaw and pitch input to controller
+		ControlledPawn->AddControllerYawInput(LookAxisVector.X);
+		ControlledPawn->AddControllerPitchInput(LookAxisVector.Y);
+	}
 }

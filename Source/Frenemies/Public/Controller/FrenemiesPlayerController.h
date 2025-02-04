@@ -34,6 +34,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> FrenemiesMoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> LookAction;
+
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);
+
+	UFUNCTION()
+	void Look(const FInputActionValue& Value);
 };
