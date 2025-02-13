@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/FrenemiesAbilitySystemComponent.h"
 #include "AbilitySystem/FrenemiesAttributeSet.h"
+#include "Net/UnrealNetwork.h"
 
 AFrenemiesPlayerState::AFrenemiesPlayerState()
 {
@@ -20,7 +21,19 @@ AFrenemiesPlayerState::AFrenemiesPlayerState()
 	SetNetUpdateFrequency(100.0f);
 }
 
+void AFrenemiesPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFrenemiesPlayerState, Level);
+}
+
 UAbilitySystemComponent* AFrenemiesPlayerState::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void AFrenemiesPlayerState::OnRep_Level(int32 OldLevel)
+{
+	
 }

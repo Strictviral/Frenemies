@@ -19,8 +19,19 @@ AFrenemiesEnemy::AFrenemiesEnemy()
 	
 }
 
+int32 AFrenemiesEnemy::GetPlayerLevel()
+{
+	return Level;
+}
+
 void AFrenemiesEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	InitAbilityActorInfo();
+}
+
+void AFrenemiesEnemy::InitAbilityActorInfo()
+{
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UFrenemiesAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }

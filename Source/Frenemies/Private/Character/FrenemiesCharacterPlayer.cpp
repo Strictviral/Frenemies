@@ -4,6 +4,7 @@
 #include "Character/FrenemiesCharacterPlayer.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/FrenemiesAbilitySystemComponent.h"
 #include "Controller/FrenemiesPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/FrenemiesPlayerState.h"
@@ -38,13 +39,22 @@ void AFrenemiesCharacterPlayer::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+int32 AFrenemiesCharacterPlayer::GetPlayerLevel()
+{
+	AFrenemiesPlayerState* FrenemiesPlayerState = GetPlayerState<AFrenemiesPlayerState>();
+	check(FrenemiesPlayerState);
+	return FrenemiesPlayerState->GetPlayerLevel();
+}
+
 void AFrenemiesCharacterPlayer::InitAbilityActorInfo()
 {
 	// Begin Init Ability actor
 	AFrenemiesPlayerState* FrenemiesPlayerState = GetPlayerState<AFrenemiesPlayerState>();
 	check(FrenemiesPlayerState);
 	FrenemiesPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(FrenemiesPlayerState, this);
+	Cast<UFrenemiesAbilitySystemComponent>(FrenemiesPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	AbilitySystemComponent = FrenemiesPlayerState->GetAbilitySystemComponent();
+	
 	AttributeSet = FrenemiesPlayerState->GetAttributeSet();
 
 	///player controllers has access tot he HUD, thats why we cna call it from the controller
@@ -56,5 +66,7 @@ void AFrenemiesCharacterPlayer::InitAbilityActorInfo()
 		}
 			
 	}
+
+	InitializeDefaultAttributes();
 	
 }
