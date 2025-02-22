@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "UI/Widget/FrenemiesUserWidget.h"
 
 AFrenemiesPlayerController::AFrenemiesPlayerController()
 {
@@ -20,7 +21,11 @@ void AFrenemiesPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(FrenemiesMoveAction, ETriggerEvent::Triggered, this, &AFrenemiesPlayerController::Move);
 	
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFrenemiesPlayerController::Look);
+
+	EnhancedInputComponent->BindAction(OpenMenuAction, ETriggerEvent::Triggered, this, &AFrenemiesPlayerController::OpenMenuTrigger);
+
 }
+
 
 void AFrenemiesPlayerController::BeginPlay()
 {
@@ -73,4 +78,43 @@ void AFrenemiesPlayerController::Look(const FInputActionValue& Value)
 		ControlledPawn->AddControllerYawInput(LookAxisVector.X);
 		ControlledPawn->AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AFrenemiesPlayerController::OpenAttributeMenuC()
+{
+	// Ensure the WidgetClass is valid (critical assumption)
+	check(WidgetClass != nullptr); // Crash if WidgetClass is not set
+
+	// Create the widget (critical operation)
+	AttributeWidget = CreateWidget<UFrenemiesUserWidget>(this, WidgetClass);
+	check(AttributeWidget != nullptr); // Crash if widget creation fails
+
+	// Add the widget to the viewport
+	AttributeWidget->AddToViewport();
+
+	FVector2d ScreenPosition = FVector2d(50.0f,50.0f);
+	
+	// Set the widget's position in the viewport
+	AttributeWidget->SetPositionInViewport(ScreenPosition, false); // Second parameter is "bRemoveDPIScale"
+
+	// Set focus to the widget
+	AttributeWidget->SetFocus();
+
+	// Set input mode to UI Only
+	FInputModeUIOnly InputMode;
+	InputMode.SetWidgetToFocus(AttributeWidget->TakeWidget()); // Set the widget to focus
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock); // Allow mouse to move freely
+	SetInputMode(InputMode);
+
+	// Show the mouse cursor
+	bShowMouseCursor = true;
+
+	UE_LOG(LogTemp, Warning, TEXT("Widget opened at position (%f, %f) and input mode set to UI Only."), ScreenPosition.X, ScreenPosition.Y);
+}
+
+
+
+void AFrenemiesPlayerController::OpenMenuTrigger(const FInputActionValue& Value)
+{
+	OpenAttributeMenuC();
 }

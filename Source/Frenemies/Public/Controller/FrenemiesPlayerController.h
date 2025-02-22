@@ -8,6 +8,7 @@
 #include "FrenemiesPlayerController.generated.h"
 
 
+class UFrenemiesUserWidget;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
@@ -26,6 +27,13 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void SetupInputComponent() override;
+	
+	UFUNCTION()
+	void OpenAttributeMenuC();
+
+	// Reference to the Widget Blueprint class
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UFrenemiesUserWidget> WidgetClass;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -37,9 +45,18 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> LookAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> OpenMenuAction;
+
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);
 
 	UFUNCTION()
 	void Look(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void OpenMenuTrigger(const FInputActionValue& Value);
+
+	// Pointer to the created widget
+	UFrenemiesUserWidget* AttributeWidget;
 };
